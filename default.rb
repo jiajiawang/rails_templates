@@ -1,3 +1,10 @@
+# Add the current directory to the path Thor uses
+# to look up files
+def source_paths
+  Array(super) + 
+    [File.expand_path(File.dirname(__FILE__))]
+end
+
 #
 # Gemfile
 #
@@ -60,5 +67,34 @@ gem_group :test do
   gem 'terminal-notifier-guard'
   gem 'launchy'
   gem 'database_cleaner'
+  gem 'simplecov', require: false
+  gem 'simplecov-rcov', require: false
+  gem 'mutant'
+  gem 'mutant-rspec'
 end
 
+inside 'config' do
+  remove_file 'database.yml'
+  create_file 'database.yml' do <<-EOF
+default: &default
+  adapter: mysql2
+  username: root
+  password: root
+  host: localhost
+  port: 3306
+
+development:
+  <<: *default
+  database: #{app_name}_development
+
+test:
+  <<: *default
+  database: #{app_name}_test
+
+production:
+  <<: *default
+  database: #{app_name}_production
+
+EOF
+  end
+end
