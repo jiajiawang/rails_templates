@@ -124,3 +124,14 @@ production:
 EOF
   end
 end
+
+after_bundle do
+  run 'bundle exec figaro install'
+  run 'bundle exec cap install'
+  run 'spring stop'
+  run 'bundle exec rails generate rspec:install'
+  run 'bundle exec guard init rspec'
+  git :init
+  git add: "."
+  git commit: %Q{ -m 'Initial commit' }
+end
