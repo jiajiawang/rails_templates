@@ -73,6 +73,22 @@ gem_group :test do
   gem 'mutant-rspec'
 end
 
+#
+# environment
+#
+
+# bullet configuration
+environment '
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.bullet_logger = true
+    Bullet.console = true
+    Bullet.rails_logger = true
+    Bullet.add_footer = true
+  end
+', env: 'development'
+
+
 inside 'config' do
   remove_file 'database.yml'
   create_file 'database.yml' do <<-EOF
