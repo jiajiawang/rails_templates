@@ -22,7 +22,7 @@ gem_group :development do
   gem 'quiet_assets'
 
   # Profiler
-  gem 'rack-mini-profiler'
+  gem 'rack-mini-profiler', require: false
 
   # Use capistrano for deployment
   gem 'capistrano', '~> 3.1.0'
@@ -87,6 +87,16 @@ environment '
     Bullet.add_footer = true
   end
 ', env: 'development'
+
+# rack-mini-profiler initialization
+initializer 'rack_profiler.rb', <<-EOF
+if Rails.env == 'development'
+  require 'rack-mini-profiler'
+
+  # initialization is skipped so trigger it
+  Rack::MiniProfilerRails.initialize!(Rails.application)
+end
+EOF
 
 
 inside 'config' do
